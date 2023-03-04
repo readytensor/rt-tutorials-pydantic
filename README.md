@@ -8,7 +8,8 @@ This repository is part of a tutorial series on Ready Tensor, a web platform for
 
 The `app/` folder in the repository contains the following key folders/sub-folders:
 
-- `data_management/` will all files related to handling and preprocessing data.
+- `data_management/` contains files related to handling and preprocessing data, including the schema provider.
+- `data_model/` contains the `infer_data_model.py` script which contains the pydantic data model for the inference data. The data model is created dynamically using the schema.
 - `inputs/` contains the input files related to the _titanic_ dataset.
 - `outputs/` is a folder to save model artifacts and other result files. Within this folder:
   - `artifacts/` is location to save model artifacts (i.e. the saved model including the trained preprocessing pipeline)
@@ -78,6 +79,69 @@ The key `instances` contains a list of objects, each of which is a sample for wh
 }
 ```
 
+To test for validation errors, send data that violates the schema for the problem. Sample data to use for testing the validation:
+
+### Example 1: Missing id field PassengerId
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "instances": [
+    {
+      "Pclass": 3,
+      "Name": "Laleff, Mr. Kristo",
+      "Sex": "male",
+      "Age": null,
+      "SibSp": 0,
+      "Parch": 0,
+      "Ticket": "349217",
+      "Fare": 7.8958,
+      "Cabin": null,
+      "Embarked": "S"
+    }
+  ]
+}' http://localhost:8080/infer
+```
+
+### Example 2: Missing input field Age
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "instances": [
+    {
+      "Pclass": 3,
+      "Name": "Laleff, Mr. Kristo",
+      "Sex": "male",
+      "SibSp": 0,
+      "Parch": 0,
+      "Ticket": "349217",
+      "Fare": 7.8958,
+      "Cabin": null,
+      "Embarked": "S"
+    }
+  ]
+}' http://localhost:8080/infer
+```
+
+### Example 3: Incorrect data type for feature 'Fare' (given str, expecting int or float)
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "instances": [
+    {
+      "Pclass": 3,
+      "Name": "Laleff, Mr. Kristo",
+      "Sex": "male",
+      "SibSp": 0,
+      "Parch": 0,
+      "Ticket": "349217",
+      "Fare": "7.8958",
+      "Cabin": null,
+      "Embarked": "S"
+    }
+  ]
+}' http://localhost:8080/infer
+```
+
 ## OpenAPI
 
 Since the service is implemented using FastAPI, we get automatic documentation of the APIs offered by the service. Visit the docs at `http://localhost:8080/docs`.
@@ -90,8 +154,8 @@ The code requires Python 3 and the following libraries:
 fastapi==0.70.0
 uvicorn==0.15.0
 pydantic==1.8.2
-pandas==1.5.5
-numpy==1.19.5
+pandas==1.5.2
+numpy==1.20.3
 scikit-learn==1.0
 feature-engine==1.1.1
 ```
