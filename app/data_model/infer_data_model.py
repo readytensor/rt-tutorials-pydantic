@@ -15,14 +15,14 @@ def get_infer_request_model(schema: BinaryClassificationSchema) -> BaseModel:
     class InferenceRequest(BaseModel): 
         instances: List[Dict[str, Any]]
 
-        @validator("instances", pre=True, each_item=True)
+        @validator("instances", each_item=True)
         def has_id_field(cls, v: Dict[str, Any]) -> Dict[str, Any]:
             ''' Check that each sample has the expected ID field'''
             if schema.id_field not in v.keys():
                 raise ValueError(f"Required ID field '{schema.id_field}' missing in input sample: {v}")
             return v
 
-        @validator("instances", pre=True, each_item=True)
+        @validator("instances", each_item=True)
         def has_all_required_features(cls, v: Dict[str, Any]) -> Dict[str, Any]:
             ''' Check that each sample has all the required features'''
             keys_ = v.keys()
@@ -31,7 +31,7 @@ def get_infer_request_model(schema: BinaryClassificationSchema) -> BaseModel:
                     raise ValueError(f"Required feature '{k}' missing in input sample: {v}")
             return v
 
-        @validator("instances", pre=True, each_item=True)
+        @validator("instances", each_item=True)
         def has_correct_data_types_for_features(cls, v: Dict[str, Any]) -> Dict[str, Any]:
             ''' Check that each feature is of correct type'''    
             for f in schema.numeric_features: 
