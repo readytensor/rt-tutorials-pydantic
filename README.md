@@ -27,6 +27,10 @@ See the following repository for more information on the **Classifier** class de
 
 - [https://github.com/readytensor/rt-tutorials-oop-ml](https://github.com/readytensor/rt-tutorials-oop-ml)
 
+See the following repository for more information on the inference service built using FastAPI in the script called `serve.py` in the path `./app/`.:
+
+- [https://github.com/readytensor/rt-tutorials-serving-with-fastapi](https://github.com/readytensor/rt-tutorials-serving-with-fastapi)
+
 ## Usage
 
 - Create your virtual environment and install dependencies listed in `requirements.txt`.
