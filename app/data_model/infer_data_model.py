@@ -2,8 +2,8 @@ from typing import List, Dict, Any
 from pydantic import BaseModel, validator
 from data_management.schema_provider import BinaryClassificationSchema
 
-#-> BaseModel
-def get_infer_request_model(schema: BinaryClassificationSchema):
+
+def get_infer_request_model(schema: BinaryClassificationSchema) -> BaseModel:
     """ Returns Pydantic  model to verify input data for inference using the given schema
 
     Args:
