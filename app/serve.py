@@ -27,9 +27,6 @@ async def ping() -> dict:
     return {"message": "Pong!"}
 
 
-# class InferenceRequest(BaseModel):
-#     instances: list
-
 InferenceRequest = get_infer_request_model(schema)
 
 
