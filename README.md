@@ -106,35 +106,17 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' http://localhost:8080/infer
 ```
 
-### Example 2: Missing input field Age
+### Example 2: Incorrect data type for Fare (str instead of float)
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
   "instances": [
     {
+      "PassengerId": "879",
       "Pclass": 3,
       "Name": "Laleff, Mr. Kristo",
       "Sex": "male",
-      "SibSp": 0,
-      "Parch": 0,
-      "Ticket": "349217",
-      "Fare": 7.8958,
-      "Cabin": null,
-      "Embarked": "S"
-    }
-  ]
-}' http://localhost:8080/infer
-```
-
-### Example 3: Incorrect data type for feature 'Fare' (given str, expecting int or float)
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{
-  "instances": [
-    {
-      "Pclass": 3,
-      "Name": "Laleff, Mr. Kristo",
-      "Sex": "male",
+      "Age": null,
       "SibSp": 0,
       "Parch": 0,
       "Ticket": "349217",
