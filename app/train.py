@@ -4,8 +4,8 @@ import random
 
 from data_management.schema_provider import BinaryClassificationSchema
 from data_management.pipeline import get_preprocess_pipeline, save_preprocessor_and_lbl_encoder, get_label_encoder
-from data_management.data_reader import read_data
-from model.classifier import Classifier
+from data_management.data_utils import read_json_in_directory, read_data
+from algorithm.classifier import Classifier
 import paths
 
 def set_seeds(seed_value=42):
@@ -22,11 +22,12 @@ def run_training():
     # set seeds 
     set_seeds(seed_value=0)     
 
-    # instantiate schem provider which loads the schema
-    data_schema = BinaryClassificationSchema(paths.SCHEMA_FPATH)
+    # instantiate schema provider which loads the schema
+    schema_dict = read_json_in_directory(paths.SCHEMA_DIR)
+    data_schema = BinaryClassificationSchema(schema_dict)
 
     # load train data
-    train_data = read_data(data_path=paths.TRAIN_DATA_FPATH, data_schema=data_schema)
+    train_data = read_data(data_dirpath=paths.TRAIN_DIR, data_schema=data_schema)
 
     # preprocessing
     preprocess_pipeline = get_preprocess_pipeline(data_schema)

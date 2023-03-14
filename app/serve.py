@@ -6,16 +6,18 @@ import uvicorn
 from data_management.schema_provider import BinaryClassificationSchema
 from data_model.infer_data_model import get_infer_request_model 
 from model_server import ModelServer
-from paths import MODEL_ARTIFACTS_PATH, SCHEMA_FPATH
+from paths import MODEL_ARTIFACTS_PATH, SCHEMA_DIR
+from data_management.data_utils import read_json_in_directory
 
 # Create an instance of the FastAPI class
 app = FastAPI()
 
 # Load the schema file
-schema = BinaryClassificationSchema(SCHEMA_FPATH)
+schema_dict = read_json_in_directory(SCHEMA_DIR)
+data_schema = BinaryClassificationSchema(schema_dict)
 
 # Load the model server
-model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=schema)
+model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=data_schema)
 
 
 @app.get("/ping")
@@ -26,7 +28,7 @@ async def ping() -> dict:
     return {"message": "Pong!"}
 
 
-InferenceRequest = get_infer_request_model(schema)
+InferenceRequest = get_infer_request_model(data_schema)
 
 
 @app.post("/infer", tags=["inference", "json"], response_class=JSONResponse)
