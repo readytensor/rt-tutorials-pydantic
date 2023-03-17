@@ -22,4 +22,10 @@ MODEL_ARTIFACTS_PATH = os.path.join(MODEL_PATH, "artifacts")
 
 # Path to outputs inside ml_vol
 OUTPUT_DIR = os.path.join(CURRENT_DIR, "outputs")
-MODEL_PREDICTIONS_PATH = os.path.join(OUTPUT_DIR, "testing_outputs", "predictions.csv")
+# Path to errors directory inside model directory
+ERRORS_DIR = os.path.join(OUTPUT_DIR, "errors")
+# Path to testing outputs directory inside model directory
+TEST_OUTPUTS_DIR = os.path.join(OUTPUT_DIR, "testing_outputs")
+# Path to predictions file inside testing_outputs directory
+MODEL_PREDICTIONS_PATH = os.path.join(TEST_OUTPUTS_DIR, "predictions.csv")
+
