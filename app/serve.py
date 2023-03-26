@@ -4,17 +4,17 @@ import pandas as pd
 import uvicorn
 
 from data_management.schema_provider import BinaryClassificationSchema
-from data_model.infer_data_model import get_infer_request_model 
 from model_server import ModelServer
 from paths import MODEL_ARTIFACTS_PATH, SCHEMA_DIR
 from data_management.data_utils import read_json_in_directory
+from data_model.infer_data_model import get_infer_request_model
 
 # Create an instance of the FastAPI class
 app = FastAPI()
 
 # Load the schema file
-schema_dict = read_json_in_directory(SCHEMA_DIR)
-data_schema = BinaryClassificationSchema(schema_dict)
+schema_dict = read_json_in_directory(file_dir_path=SCHEMA_DIR)
+data_schema = BinaryClassificationSchema(schema_dict=schema_dict)
 
 # Load the model server
 model_server = ModelServer(model_path=MODEL_ARTIFACTS_PATH, data_schema=data_schema)
@@ -37,7 +37,7 @@ async def infer(request: InferenceRequest) -> dict:
     POST endpoint that takes input data as a JSON object and returns the predicted class probabilities.
     """
     # Convert the JSON object to a pandas dataframe
-    data = pd.DataFrame.from_records(request.dict()["instances"])
+    data = pd.DataFrame.from_records(request.instances)
     print(f"Invoked with {data.shape[0]} records")
     predictions = model_server.predict_for_online_inferences(data)
     return {

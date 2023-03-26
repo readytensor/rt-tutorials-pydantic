@@ -1,6 +1,9 @@
 import os
 import warnings
 import joblib
+from typing import Optional
+import pandas as pd
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 
 warnings.filterwarnings('ignore')
@@ -16,7 +19,8 @@ class Classifier:
     model_name = "random_forest_binary_classifier"
     model_fname = "random_forest_binary_classifier.save"
 
-    def __init__(self, n_estimators=100, min_samples_split=2, min_samples_leaf=1, **kwargs):
+    def __init__(self, n_estimators: Optional[int] = 100, min_samples_split: Optional[int] = 2,
+                 min_samples_leaf: Optional[int] = 1, **kwargs):
         """Construct a new Random Forest binary classifier.
 
         Args:
@@ -29,7 +33,7 @@ class Classifier:
         self.min_samples_leaf = int(min_samples_leaf)
         self.model = self.build_model()
 
-    def build_model(self):
+    def build_model(self) -> RandomForestClassifier:
         """Build a new Random Forest binary classifier."""
         model = RandomForestClassifier(
             n_estimators=self.n_estimators,
@@ -38,7 +42,7 @@ class Classifier:
         )
         return model
 
-    def fit(self, train_X, train_y):
+    def fit(self, train_X: pd.DataFrame, train_y: pd.Series) -> None:
         """Fit the Random Forest binary classifier to the training data.
 
         Args:
@@ -47,42 +51,39 @@ class Classifier:
         """
         self.model.fit(train_X, train_y)
 
-    def predict(self, X):
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
         """Predict class labels for the given data.
 
         Args:
             X (pandas.DataFrame): The input data.
-
         Returns:
             numpy.ndarray: The predicted class labels.
         """
         return self.model.predict(X)
 
-    def predict_proba(self, X):
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         """Predict class probabilities for the given data.
 
         Args:
             X (pandas.DataFrame): The input data.
-
         Returns:
             numpy.ndarray: The predicted class probabilities.
         """
         return self.model.predict_proba(X)
 
-    def evaluate(self, x_test, y_test):
+    def evaluate(self, x_test: pd.DataFrame, y_test: pd.Series) -> float:
         """Evaluate the Random Forest binary classifier and return the accuracy.
 
         Args:
             x_test (pandas.DataFrame): The features of the test data.
             y_test (pandas.Series): The labels of the test data.
-
         Returns:
             float: The accuracy of the Random Forest binary classifier.
         """
         if self.model is not None:
             return self.model.score(x_test, y_test)
 
-    def save(self, model_path):
+    def save(self, model_path: str) -> None:
         """Save the Random Forest binary classifier to disk.
 
         Args:
@@ -91,12 +92,11 @@ class Classifier:
         joblib.dump(self, os.path.join(model_path, Classifier.model_fname))
 
     @classmethod
-    def load(cls, model_path):
+    def load(cls, model_path: str) -> 'Classifier':
         """Load the Random Forest binary classifier from disk.
 
         Args:
             model_path (str): The path to the saved model.
-
         Returns:
             Classifier: A new instance of the loaded Random Forest binary classifier.
         """
